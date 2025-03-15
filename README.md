@@ -84,7 +84,7 @@ Now your environment is ready to go! 😎
 Once everything is set up, run the playbook to deploy the NGINX container with WordPress. You can do this by running:
 
 ```bash
-ansible-playbook site.yml
+ansible-playbook playbook.yml
 ```
 
 This will pull the necessary NGINX Docker image, clone WordPress, and configure everything! 🎉
