@@ -1,5 +1,6 @@
 # vars/main.yml
-
+vars:
+    ansible_python_interpreter: /usr/bin/python3
 # WordPress Database Configuration
 wordpress_db_host: "{{ lookup('env', 'WORDPRESS_DB_HOST') }}"
 wordpress_db_name: "{{ lookup('env', 'WORDPRESS_DB_NAME') }}"

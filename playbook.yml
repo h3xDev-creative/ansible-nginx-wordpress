@@ -3,8 +3,7 @@
   become: yes
   tasks:
     - name: Include variables from main.yml
-      include_vars:
-        path: vars/main.yml
+      include_vars: vars/main.yml
 
     - name: Pull the NGINX Docker image
       docker_image:
