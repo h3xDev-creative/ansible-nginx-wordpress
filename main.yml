@@ -1,0 +1,11 @@
+# vars/main.yml
+
+# WordPress Database Configuration
+wordpress_db_host: "{{ lookup('env', 'WORDPRESS_DB_HOST') }}"
+wordpress_db_name: "{{ lookup('env', 'WORDPRESS_DB_NAME') }}"
+wordpress_db_user: "{{ lookup('env', 'WORDPRESS_DB_USER') }}"
+wordpress_db_password: "{{ lookup('env', 'WORDPRESS_DB_PASSWORD') }}"
+
+# NGINX Configuration
+nginx_port: 80
+nginx_conf_template: "nginx.conf.j2"

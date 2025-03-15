@@ -1,0 +1,65 @@
+- name: Deploy NGINX with WordPress
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Include variables from main.yml
+      include_vars:
+        path: vars/main.yml
+    - name: Pull the NGINX Docker image
+      docker_image:
+        name: nginx
+        source: pull
+
+    - name: Create a directory to store WordPress data
+      file:
+        path: /tmp/wordpress_data
+        state: directory
+
+    - name: Clone the WordPress repository
+      git:
+        repo: https://github.com/WordPress/WordPress.git
+        dest: /tmp/wordpress_data
+        clone: yes
+
+    - name: Create the container and mount the WordPress code
+      docker_container:
+        name: wordpress_nginx
+        image: nginx
+        state: started
+        restart_policy: always
+        published_ports:
+          - "80:80"   # Expose port 80 for web traffic
+        volumes:
+          - "/tmp/wordpress_data:/usr/share/nginx/html"   # Mount WordPress directory
+        command: /bin/bash -c "chown -R www-data:www-data /usr/share/nginx/html"
+
+    - name: Copy custom NGINX configuration from template
+      template:
+        src: roles/nginx/templates/nginx.conf.j2  # The Jinja2 template file
+        dest: /etc/nginx/sites-enabled/default  # Temporary location inside the container
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Copy NGINX config into the container
+      docker_cp:
+        src: /tmp/nginx.conf
+        dest: /etc/nginx/nginx.conf
+        container: wordpress_nginx
+
+    - name: Set up PHP-FPM inside the container
+      docker_container:
+        name: wordpress_nginx
+        image: nginx
+        command: /bin/bash -c "apt-get update && apt-get install -y php-fpm php-mysql && service php7.4-fpm start && nginx -g 'daemon off;'"
+        state: started
+        volumes:
+          - "/tmp/wordpress_data:/usr/share/nginx/html"
+        published_ports:
+          - "80:80"
+
+    - name: Clean up temporary WordPress data directory
+      file:
+        path: /tmp/wordpress_data
+        state: absent
+
