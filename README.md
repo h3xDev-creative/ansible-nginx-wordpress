@@ -44,7 +44,7 @@ Follow the official instructions for [Docker installation](https://docs.docker.c
 Now, let’s get the project on your local machine! Clone the repo with Git:
 
 ```bash
-git clone https://github.com/your-username/ansible-wordpress-nginx.git
+git git@github.com:h3xDev-creative/ansible-nginx-wordpress.git
 cd ansible-wordpress-nginx
 ```
 
